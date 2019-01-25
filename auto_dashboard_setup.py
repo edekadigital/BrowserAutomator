@@ -11,5 +11,5 @@ def setup():
 
 
 if __name__ == "__main__":
-    # environ["CHROMEDRIVER"] = './chromedriver'
+    environ["CHROMEDRIVER"] = './chromedriver'
     setup()
