@@ -1,43 +1,41 @@
 from selenium.webdriver.common.by import By
 from selenium import webdriver
-from json import load
-from os.path import exists
 from time import sleep
+from runner import get_actions, get_action_functions
 
 
-def action_runner(driver):
-    """reads actions from json and runs them"""
-    actions = read_actions()
-    run_actions(driver, actions)
-
-
-def run_actions(driver, actions):
-    """given a list of actions, this function executes them"""
-    for action in actions:
-        action_mapper(driver, action['type'], action['content'])
-
-
-def read_actions(filename='actions.json'):
-    """given a config file, reads the contained actions
-       returns them as a list of actions
-       file -> [{'type':'wait', 'content': '60'},]"""
-    if not exists(filename):
-        return []
-    with open(filename) as file:
-        actions = load(file)
+def actions_from_file():
+    filename = "setup.yml"
+    all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
+                   "for every": for_every}
+    actions = get_actions(filename, all_actions)
     return actions
 
 
-def action_mapper(driver, action_type, content=None):
-    types = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
-             "repeat": repeater}
-    f = types.get(action_type, action_on_element)
-    f(driver, content)
+def actions_from_variable(actions):
+    all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
+                   "for every": for_every}
+    actions = get_action_functions(actions, all_actions)
+    return actions
+
+
+def action_runner(driver):
+    actions = actions_from_file()
+    run_functions(driver, actions)
+
+
+def run_functions(driver, actions):
+    for func, content in actions:
+        func(driver, content)
 
 
 def wait(driver, content):
     """given a time to wait in seconds as `content`, blocks for the amount of seconds"""
-    sleep(int(content))
+    units = {"days": lambda x: 24 * 60 * 60 * x, "hours": lambda x: 60 * 60 * x, "minutes": lambda x: 60 * x,
+             "seconds": lambda x: x}
+    unit, amount = tuple(content[0].items())[0]
+
+    sleep(units[unit](amount))
 
 
 def load_url(driver, content):
@@ -91,17 +89,20 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
         driver.execute_script(js)
 
 
-def repeater(driver, content):
+def for_every(driver, content):
     urls, actions = content["urls"], content["actions"]
     for i in range(len(urls)):
-        # injecting the current url
+        # injecting the current url into load/net_tab actions
         for action in actions:
-            if (action["type"] == "load" or action["type"] == "new_tab"):
-                action["content"] = urls[i]
-                if i > 0:
-                    action["type"] = "new_tab"
-        run_actions(driver, actions)
-
+            for action_type, content in action.items():
+                if action_type == "load" or action_type == "new_tab":
+                    if i > 0:
+                        action.pop(action_type)
+                        action["new_tab"] = urls[i]
+                    else:
+                        action[action_type] = urls[i]
+        functions = actions_from_variable(actions)
+        run_functions(driver, functions)
 
 if __name__ == "__main__":
-    print(read_actions())
+    pass
