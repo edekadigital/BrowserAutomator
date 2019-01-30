@@ -5,6 +5,8 @@ from runner import get_actions, get_action_functions
 
 
 def actions_from_file():
+    """reads the setup.yml file
+       returns a list of tuples of all the functions specified inside the setup file with their parameters"""
     filename = "setup.yml"
     all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
                    "for every": for_every}
@@ -13,6 +15,8 @@ def actions_from_file():
 
 
 def actions_from_variable(actions):
+    """given a list of actions
+       returns a list of tuples of all the functions specified inside the actions list with their parameters"""
     all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
                    "for every": for_every}
     actions = get_action_functions(actions, all_actions)
@@ -20,11 +24,13 @@ def actions_from_variable(actions):
 
 
 def action_runner(driver):
+    """gets the action function-parameter tuples and runs them"""
     actions = actions_from_file()
     run_functions(driver, actions)
 
 
 def run_functions(driver, actions):
+    """given a list of function-parameter tuples, runs each function"""
     for func, content in actions:
         func(driver, content)
 
@@ -91,6 +97,8 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
 
 
 def for_every(driver, content):
+    """given a list of urls and a list of actions
+       executes all of the actions for each url"""
     urls, actions = content["urls"], content["actions"]
     for i in range(len(urls)):
         # injecting the current url into load/net_tab actions
@@ -104,6 +112,7 @@ def for_every(driver, content):
                         action[action_type] = urls[i]
         functions = actions_from_variable(actions)
         run_functions(driver, functions)
+
 
 if __name__ == "__main__":
     pass

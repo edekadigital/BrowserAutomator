@@ -2,7 +2,7 @@ from file_reader import read_actions
 
 
 def get_actions(filename, types):
-    """reads actions from json and runs them"""
+    """reads actions from a yaml and returns the corresponding functions"""
     actions = read_actions(filename)
     return get_action_functions(actions, types)
 
