@@ -20,6 +20,15 @@ def loop_runner(driver):
             action.run_task(driver)
 
 
+def reset(driver):
+    """closes all tabs except the first"""
+    handles = driver.window_handles
+    for handle in handles[1:]:
+        driver.switch_to.window(handle)
+        driver.close()
+    driver.switch_to.window(handles[0])
+
+
 class PeriodicallyCheck:
     def __init__(self, content):
         self.time_unit, self.every_n = tuple(content[0].items())[0]
@@ -59,4 +68,5 @@ class WifiFixer(PeriodicallyCheck):
 class RepeatEvery(PeriodicallyCheck):
     def run_task(self, driver):
         if self.check_criteria():
+            reset(driver)
             action_runner(driver)
