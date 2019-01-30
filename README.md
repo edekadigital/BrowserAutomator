@@ -22,7 +22,7 @@ The following actions are available:
 In this file you can specify actions that loop after the setup ran once.
 The following actions are available:
 - `repeat every`: given a time unit (seconds, minutes, hours, days) and an amount of time, repeats the setup every n seconds/minutes/...
-- `fix wifi`: given a time unit and an amount of time, checks every n seconds/minutes/... if the network is working, and runs the setup again if it's not
+- `fix wifi`: given a time unit and an amount of time, checks every n seconds/minutes/... if the network is working, and restarts the script if it doesn't
 - `switch tabs`: given a time unit and an amount of time, switches the next tab every n seconds/minutes/... If the last tab is reached, it goes back to the first
 
 ## Usage

@@ -47,7 +47,6 @@ def wait(driver, content):
 def load_url(driver, content):
     """given a url as `content`, opens the url"""
     driver.get(content)
-    print(driver.page_source)
 
 
 def new_tab(driver: webdriver.Chrome, content):

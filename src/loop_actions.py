@@ -19,7 +19,9 @@ def loop_runner(driver):
     all_objs = get_action_objects()
     while True:
         for action in all_objs:
-            action.run_task(driver)
+            out = action.run_task(driver)
+            if out:
+                return
 
 
 def reset(driver):
@@ -64,12 +66,12 @@ class TabSwitcher(PeriodicallyCheck):
 
 
 class WifiFixer(PeriodicallyCheck):
-    """checks every_n time_units if the network is working and runs the setup if it doesn't"""
+    """checks every_n time_units if the network is working and returns True if it doesn't"""
     def run_task(self, driver):
         if self.check_criteria():
             if check_network_not_working():
                 # if the network isn't working the setup gets rerun
-                action_runner(driver)
+                return True
 
 
 class RepeatEvery(PeriodicallyCheck):

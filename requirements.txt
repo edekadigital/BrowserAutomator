@@ -1,2 +1,3 @@
 selenium
 ruamel.yaml
+requests
