@@ -10,7 +10,3 @@ def setup():
         action_runner(driver)
         loop_runner(driver)
         driver.quit()
-
-
-if __name__ == "__main__":
-    setup()

@@ -16,6 +16,3 @@ def get_action_functions(actions, types: dict):
             f = types[action_type]
             all_actions.append((f, content))
     return all_actions
-
-# types = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
-#         "for every": for_every}

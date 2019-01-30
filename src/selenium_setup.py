@@ -10,7 +10,3 @@ def selenium_setup(chromedriver_path="/usr/lib/chromium-browser/chromedriver", f
     if fullscreen:
         driver.fullscreen_window()
     return driver
-
-
-if __name__ == "__main__":
-    pass
