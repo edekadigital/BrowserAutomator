@@ -12,10 +12,11 @@ def read_actions(filename):
 
 
 def get_absolute_path(filename):
-    """given the filename of a file in the project directory, returns the absolute path of that file"""
+    """given the filename of a file in the project's config directory, returns the absolute path of that file"""
     full_path = os.path.realpath(__file__)
-    directory = os.path.split(full_path)[0]
-    absolute_path = directory + "/" + filename
+    directory = os.path.split(full_path)[0].split("/")
+    directory = "/".join(directory[:-1])
+    absolute_path = directory + "/config/" + filename
     return absolute_path
 
 

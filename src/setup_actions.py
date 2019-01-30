@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from time import sleep
-from runner import get_actions, get_action_functions
+from src.runner import get_actions, get_action_functions
 
 
 def actions_from_file():

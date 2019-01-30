@@ -1,7 +1,7 @@
 from datetime import datetime
-from network import check_network_not_working
-from setup_actions import switch_tabs, action_runner
-from runner import get_actions
+from src.network import check_network_not_working
+from src.setup_actions import switch_tabs, action_runner
+from src.runner import get_actions
 
 
 def get_action_objects():

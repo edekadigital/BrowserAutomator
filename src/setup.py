@@ -1,6 +1,6 @@
-from selenium_setup import selenium_setup
-from setup_actions import action_runner
-from loop_actions import loop_runner
+from src.selenium_setup import selenium_setup
+from src.setup_actions import action_runner
+from src.loop_actions import loop_runner
 
 
 def setup():

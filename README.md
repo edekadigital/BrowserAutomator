@@ -27,4 +27,4 @@ The following actions are available:
 
 ## Usage
 In the project directory run
-`python setup.py`
+`python main.py`
