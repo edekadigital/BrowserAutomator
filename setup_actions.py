@@ -48,7 +48,7 @@ def new_tab(driver: webdriver.Chrome, content):
     """given a url as `content`, opens the url in a new tab"""
     driver.execute_script("window.open('about:blank','_blank');")
     driver.switch_to.window(driver.window_handles[0])
-    driver.switch_to.window(driver.window_handles[1])
+    driver.switch_to.window(driver.window_handles[-1])
     load_url(driver, content)
 
 
