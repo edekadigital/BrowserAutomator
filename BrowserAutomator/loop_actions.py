@@ -19,7 +19,7 @@ def loop_runner(driver, filename):
     all_objs = get_action_objects(filename)
     while True:
         for action in all_objs:
-            out = action.run_task(driver)
+            out = action.run_task(driver, filename)
             if out == 1:
                 print(action)
                 return 1
@@ -60,7 +60,7 @@ class PeriodicallyCheck:
 
 class TabSwitcher(PeriodicallyCheck):
     """switches to the next tab every_n time_units"""
-    def run_task(self, driver):
+    def run_task(self, driver, filename):
         if self.check_criteria():
             open_tabs = len(driver.window_handles)
             self.current_tab = (self.current_tab + 1) % open_tabs
@@ -69,17 +69,17 @@ class TabSwitcher(PeriodicallyCheck):
 
 class WifiFixer(PeriodicallyCheck):
     """checks every_n time_units if the network is working and returns True if it doesn't"""
-    def run_task(self, driver):
+    def run_task(self, driver, filename):
         if self.check_criteria():
             if check_network_not_working():
                 # if the network isn't working the setup gets rerun
-                return action_runner(driver)
+                return action_runner(driver, filename)
 
 
 class RepeatEvery(PeriodicallyCheck):
     """runs the setup every_n time_units"""
-    def run_task(self, driver):
+    def run_task(self, driver, filename):
         if self.check_criteria():
             print("repeating")
             reset(driver)
-            return action_runner(driver)
+            return action_runner(driver, filename=filename)
