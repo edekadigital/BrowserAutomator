@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException, NoSuchElementException, NoSuchAttributeException, NoSuchWindowException, JavascriptException
 from selenium import webdriver
 from time import sleep
 from src.runner import get_actions, get_action_functions
@@ -26,13 +27,16 @@ def actions_from_variable(actions):
 def action_runner(driver):
     """gets the action function-parameter tuples and runs them"""
     actions = actions_from_file()
-    run_functions(driver, actions)
+    if run_functions(driver, actions) == 1:
+        return 1
 
 
 def run_functions(driver, actions):
     """given a list of function-parameter tuples, runs each function"""
     for func, content in actions:
-        func(driver, content)
+        if func(driver, content) == 1:
+            print("function {0} failed to execute with content: {1}".format(func, content))
+            return 1
 
 
 def wait(driver, content):
@@ -40,7 +44,6 @@ def wait(driver, content):
     units = {"days": lambda x: 24 * 60 * 60 * x, "hours": lambda x: 60 * 60 * x, "minutes": lambda x: 60 * x,
              "seconds": lambda x: x}
     unit, amount = tuple(content[0].items())[0]
-
     sleep(units[unit](amount))
 
 
@@ -51,24 +54,33 @@ def load_url(driver, content):
 
 def new_tab(driver: webdriver.Chrome, content):
     """given a url as `content`, opens the url in a new tab"""
-    driver.execute_script("window.open('about:blank','_blank');")
+    try:
+        driver.execute_script("window.open('about:blank','_blank');")
+    except JavascriptException:
+        return 1
     driver.switch_to.window(driver.window_handles[0])
     driver.switch_to.window(driver.window_handles[-1])
-    load_url(driver, content)
+    return load_url(driver, content)
 
 
 def switch_tabs(driver: webdriver.Chrome, content):
     """given an tab index as `content`, switches to the given tab"""
     windows = driver.window_handles
     if len(windows) > int(content):
-        driver.switch_to.window(windows[content])
+        try:
+            driver.switch_to.window(windows[content])
+        except NoSuchWindowException:
+            return 1
 
 
 def interact(driver, content):
     """given a list of actions on elements, executes the actions"""
     for action in content:
         interaction_content = action.get('content', None)
-        action_on_element(driver, action['type'], action['name'], interaction_content)
+        result = action_on_element(driver, action['type'], action['name'], interaction_content)
+        if result == 1:
+            print("interaction failed")
+            return 1
 
 
 def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
@@ -77,8 +89,11 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
     types = {"id": By.ID, "name": By.NAME, "class": By.CLASS_NAME, "css": By.CSS_SELECTOR, "xpath": By.XPATH,
              "tag_name": By.TAG_NAME}
     js_types = {"id": "getElementById", "name": "getElementsByName[0]", "class": "getElementsByClassName[0]"}
-
-    elem = driver.find_element(types[elem_type], name)
+    try:
+        elem = driver.find_element(types[elem_type], name)
+    except (NoSuchElementException, NoSuchAttributeException):
+        print("element not found: {0} {1}".format(elem_type, name))
+        return 1
     if not elem.is_displayed() and content:
         js = "{0}{1}('{2}').value={3};".format("javascript:document.", js_types[elem_type], name, content)
         driver.execute_script(js)
@@ -110,7 +125,8 @@ def for_every(driver, content):
                     else:
                         action[action_type] = urls[i]
         functions = actions_from_variable(actions)
-        run_functions(driver, functions)
+        if run_functions(driver, functions) == 1:
+            return 1
 
 
 if __name__ == "__main__":
