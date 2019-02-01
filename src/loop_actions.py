@@ -2,6 +2,7 @@ from datetime import datetime
 from src.network import check_network_not_working
 from src.setup_actions import switch_tabs, action_runner
 from src.runner import get_actions
+from time import sleep
 
 
 def get_action_objects():
@@ -23,6 +24,7 @@ def loop_runner(driver):
             if out == 1:
                 print(action)
                 return 1
+        sleep(0.5)
 
 
 def reset(driver):
