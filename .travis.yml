@@ -3,8 +3,8 @@ python: '3.6'
 script: true
 deploy:
   provider: pypi
-  user: maxlo
+  user:
   password:
-    secure: AWigGm9238N1m8pw0QOsYqrXx3beZgNkBaizgN33JmhohmURf/aaVkLGHrEmRtkjJGvSGlistJ7vKHkp9Kgn/py8XGLzoiY6IQ5hgBt5YRUt7xpt1KrhGhz7mCOzrD+WzBNZBgEaMkC8K99VPcHYee4VcYhpyFC0ZQZOaX1JFDv9Yh8D13OAi5ZI2jPRnvUWqNCUj5YqIS4zd1PeryBKQRSM9o2PR2GlWd/3xOJMe/yHaVIV52H+HgdCU6QysdRv0ob9atisHcU3fpcweycrYMbYM20YzmhR2eocKu9p+HYAySpiAkbyON0z254tY+zMqQyAvGBokiCmqb0JnLXeXXcIYOeM9Y16bvwqIh3pvpw6gio2QsUjgg2uHUbwWQq6wBI6YLuymVg/Q5be1kzwrFtkTDf1wupG404zQ7gPsHPTz4JWh0RsdRmKiu9bC2jGsZQOcLnBJOuKqDrw4cHCnbf50a0y8gpjCb8fbe4kkOpCw7aEoZ818KGGtt2VpaoW8VkKlRyt3E0V1Fl2bvi7QsJRvznhPHThY63niho1qAA1z5Qumh5FRA+DXGh2ahwVhNzpmxsGulLQhCyfb0Lt/5QsYf8UuTPnAp3W8NgSJ5RAbzIPXktXt3Z/86kquC3YWwhrWAVSZeGJk3BmPjGbWescsRczBoU6YWUL7kcZFRc=
+    secure:
   on:
     branch: master
