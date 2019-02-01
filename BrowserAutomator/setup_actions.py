@@ -2,13 +2,12 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, NoSuchAttributeException, NoSuchWindowException, JavascriptException
 from selenium import webdriver
 from time import sleep
-from src.runner import get_actions, get_action_functions
+from BrowserAutomator.runner import get_actions, get_action_functions
 
 
-def actions_from_file():
+def actions_from_file(filename):
     """reads the setup.yml file
        returns a list of tuples of all the functions specified inside the setup file with their parameters"""
-    filename = "setup.yml"
     all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
                    "for every": for_every}
     actions = get_actions(filename, all_actions)
@@ -24,9 +23,9 @@ def actions_from_variable(actions):
     return actions
 
 
-def action_runner(driver):
+def action_runner(driver, filename):
     """gets the action function-parameter tuples and runs them"""
-    actions = actions_from_file()
+    actions = actions_from_file(filename)
     if run_functions(driver, actions) == 1:
         return 1
 

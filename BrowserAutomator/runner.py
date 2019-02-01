@@ -1,4 +1,4 @@
-from src.file_reader import read_actions
+from BrowserAutomator.file_reader import read_actions
 
 
 def get_actions(filename, types):

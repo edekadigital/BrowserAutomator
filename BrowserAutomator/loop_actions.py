@@ -1,13 +1,12 @@
 from datetime import datetime
-from src.network import check_network_not_working
-from src.setup_actions import switch_tabs, action_runner
-from src.runner import get_actions
+from BrowserAutomator.network import check_network_not_working
+from BrowserAutomator.setup_actions import switch_tabs, action_runner
+from BrowserAutomator.runner import get_actions
 from time import sleep
 
 
-def get_action_objects():
+def get_action_objects(filename):
     """reads the actions from loop.yml and returns the objects specified in it"""
-    filename = "loop.yml"
     all_actions = {'repeat every': RepeatEvery, 'fix wifi': WifiFixer, 'switch tabs': TabSwitcher}
     actions = get_actions(filename, all_actions)
     # create all objects
@@ -15,9 +14,9 @@ def get_action_objects():
     return all_objs
 
 
-def loop_runner(driver):
+def loop_runner(driver, filename):
     """calls the run_task function of all objects"""
-    all_objs = get_action_objects()
+    all_objs = get_action_objects(filename)
     while True:
         for action in all_objs:
             out = action.run_task(driver)
