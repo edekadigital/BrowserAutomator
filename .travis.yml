@@ -1,10 +1,10 @@
 language: python
 python: '3.6'
 script: true
-deploy:
-  provider: pypi
-  user:
-  password:
-    secure:
-  on:
-    branch: master
+# deploy:
+#  provider: pypi
+#  user:
+#  password:
+#    secure:
+#  on:
+#    branch: master
