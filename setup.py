@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
     name="BrowserAutomator",
     version="1.0.0",
-    author="Maximilian Lohmann",
+    author="Edeka Digital",
     description="A package to simplify browser automation",
     long_description=long_description,
     long_description_content_type="text/markdown",

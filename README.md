@@ -1,5 +1,6 @@
-# Browserautomator
-Browserautomator is an utility to easily control websites using a YAML configuration file.
+# BrowserAutomator [![Build Status](https://travis-ci.org/edekadigital/BrowserAutomator.svg?branch=master)](https://travis-ci.org/edekadigital/BrowserAutomator)
+
+BrowserAutomator is an utility to easily control websites using a YAML configuration file.
 ## Installation
 Using pip for Python 3:
 `pip install -r requirements.txt`
