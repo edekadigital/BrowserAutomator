@@ -1,9 +1,10 @@
 # BrowserAutomator [![Build Status](https://travis-ci.org/edekadigital/BrowserAutomator.svg?branch=master)](https://travis-ci.org/edekadigital/BrowserAutomator)
 
-BrowserAutomator is an utility to easily control websites using a YAML configuration file.
+BrowserAutomator is a package to help you easily control websites using a simple YAML configuration.
 ## Installation
 Using pip for Python 3:
-`pip install -r requirements.txt`
+In the project directory run:
+`pip install .`
 
 ## Configuration
 #### setup.yml
@@ -27,5 +28,6 @@ The following actions are available:
 - `switch tabs`: given a time unit and an amount of time, switches the next tab every n seconds/minutes/... If the last tab is reached, it goes back to the first
 
 ## Usage
-In the project directory run
-`python main.py`
+In Python:
+- `from BrowserAutomator.setup import run`
+- `run(your_setup_yml_filename, your_loop_yml_filename)`
