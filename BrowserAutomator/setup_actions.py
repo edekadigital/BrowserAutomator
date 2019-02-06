@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import WebDriverException, NoSuchElementException, NoSuchAttributeException, NoSuchWindowException, JavascriptException
+from selenium.common.exceptions import NoSuchElementException, NoSuchAttributeException, NoSuchWindowException, JavascriptException
 from selenium import webdriver
 from time import sleep
 from BrowserAutomator.runner import get_actions, get_action_functions
@@ -23,19 +23,19 @@ def actions_from_variable(actions):
     return actions
 
 
-def action_runner(driver, filename):
-    """gets the action function-parameter tuples and runs them"""
-    actions = actions_from_file(filename)
-    if run_functions(driver, actions) == 1:
-        return 1
-
-
 def run_functions(driver, actions):
     """given a list of function-parameter tuples, runs each function"""
     for func, content in actions:
         if func(driver, content) == 1:
             print("function {0} failed to execute with content: {1}".format(func, content))
             return 1
+
+
+def action_runner(driver, filename):
+    """gets the action function-parameter tuples and runs them"""
+    actions = actions_from_file(filename)
+    if run_functions(driver, actions) == 1:
+        return 1
 
 
 def wait(driver, content):
@@ -126,7 +126,3 @@ def for_every(driver, content):
         functions = actions_from_variable(actions)
         if run_functions(driver, functions) == 1:
             return 1
-
-
-if __name__ == "__main__":
-    pass

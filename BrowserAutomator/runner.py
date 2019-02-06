@@ -7,7 +7,7 @@ def get_actions(filename, types):
     return get_action_functions(actions, types)
 
 
-def get_action_functions(actions, types: dict):
+def get_action_functions(actions: list, types: dict):
     """given a list of actions and a dictionary of action names mapped to the corresponding functions
        returns a list of tuples with the function and parameters"""
     all_actions = []

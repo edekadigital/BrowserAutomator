@@ -11,12 +11,12 @@ def setup(setup_filename, loop_filename):
     if action_runner(driver, filename=setup_filename) == 1:
         driver.quit()
         return 1
-    out = loop_runner(driver, filename=loop_filename)
+    out = loop_runner(driver, filename=loop_filename, setup_filename=setup_filename)
     driver.quit()
     return out
 
 
 def run(setup_filename, loop_filename):
     while True:
-        setup(setup_filename=setup_filename, loop_filename=loop_filename)
+        setup(setup_filename, loop_filename)
         sleep(30)
