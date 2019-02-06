@@ -81,4 +81,4 @@ class RepeatEvery(PeriodicallyCheck):
         if self.check_criteria():
             print("repeating")
             reset(driver)
-            return action_runner(driver, filename=setup_filename)
+            return action_runner(driver, setup_filename)

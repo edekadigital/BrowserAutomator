@@ -1,4 +1,5 @@
 from selenium.common.exceptions import JavascriptException, NoSuchWindowException
+from datetime import datetime
 
 
 class SwitchTo:
@@ -35,8 +36,18 @@ class SeleniumMock:
             else:
                 self.last_script = script
 
+        def close(self):
+            self.window_handles.remove(self.switch_to.current_window)
+            self.switch_to.current_window = self.window_handles[-1]
+
         def quit(self):
             self.quit_called = True
+
+        def reset(self):
+            self.fullscreen, self.quit_called = False, False
+            self.url, self.last_script, self.switch_to = None, None, SwitchTo()
+            self.window_handles = [0, 1]
+
 
     instance = None
 
@@ -71,6 +82,50 @@ class YamlMock:
 
     def load(self, path):
         return path
+
+
+class LoopObjMock:
+    class __LoopObjMock:
+        def __init__(self):
+            self.driver, self.filename = None, None
+            self.run_task_executed = 0
+
+        def run_task(self, driver, filename):
+            """on the second run it returns 1"""
+            self.driver, self.filename = driver, filename
+            if self.run_task_executed >= 1:
+                return 1
+            self.run_task_executed += 1
+
+    instance = None
+
+    def __new__(cls):
+        if not LoopObjMock.instance:
+            LoopObjMock.instance = LoopObjMock.__LoopObjMock()
+        return LoopObjMock.instance
+
+
+class PeriodicallyCheckMock:
+    def __init__(self):
+        self.get_current_time_called = 0
+
+    def check_criteria(self):
+        pass
+
+    def get_current_time(self, unit):
+        self.get_current_time_called += 1
+        return self.get_current_time_called
+
+
+class DateTimeMock(datetime):
+    @classmethod
+    def now(cls):
+        return cls(2018, 12, 31, 23, 59, 59, 999999)
+
+
+DatetimeMock = DateTimeMock(2018, 12, 31, 23, 59, 59, 999999)
+
+
 
 
 if __name__ == "__main__":
