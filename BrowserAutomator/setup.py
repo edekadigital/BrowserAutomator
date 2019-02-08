@@ -4,10 +4,10 @@ from BrowserAutomator.loop_actions import loop_runner
 from time import sleep
 
 
-def setup(setup_filename, loop_filename):
+def setup(setup_filename, loop_filename, chromedriver_path="/usr/lib/chromium-browser/chromedriver"):
     """starts the selenium session and executes the actions
         when one of the actions fail the execution gets restarted"""
-    driver = selenium_setup()
+    driver = selenium_setup(chromedriver_path)
     if action_runner(driver, filename=setup_filename) == 1:
         driver.quit()
         return 1

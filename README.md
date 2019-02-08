@@ -3,8 +3,7 @@
 BrowserAutomator is a package to help you easily control websites using a simple YAML configuration.
 ## Installation
 Using pip for Python 3:
-In the project directory run:
-`pip install .`
+`pip install BrowserAutomator`
 
 ## Configuration
 #### setup.yml
@@ -30,4 +29,5 @@ The following actions are available:
 ## Usage
 In Python:
 - `from BrowserAutomator.setup import run`
-- `run(your_setup_yml_filename, your_loop_yml_filename)`
+- `run(your_setup_yml_filename, your_loop_yml_filename, your_chromedriver_path)`
+the default Chromedriver path is "/usr/lib/chromium-browser/chromedriver"

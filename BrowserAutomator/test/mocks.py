@@ -1,5 +1,4 @@
-from selenium.common.exceptions import JavascriptException, NoSuchWindowException
-from datetime import datetime
+from selenium.common.exceptions import JavascriptException, NoSuchWindowException, NoSuchElementException
 
 
 class SwitchTo:
@@ -16,13 +15,16 @@ class SwitchTo:
 
 class SeleniumMock:
     """A singleton Selenium webdriver mock"""
+
     class __SeleniumMock:
         def __init__(self, path=None, chrome_options=None):
             self.fullscreen, self.quit_called = False, False
             self.path, self.chrome_options = path, chrome_options
             self.url, self.last_script, self.switch_to = None, None, SwitchTo()
+            self.last_find_element_call, self.elem_visible = [], True
+            self.last_elem: ElementMock = None
             self.window_handles = [0, 1]
-            self.throw_js_error = False
+            self.throw_js_error, self.throw_no_such_elem_error = False, False
 
         def fullscreen_window(self):
             self.fullscreen = True
@@ -36,6 +38,14 @@ class SeleniumMock:
             else:
                 self.last_script = script
 
+        def find_element(self, elem_type, name):
+            if self.throw_no_such_elem_error:
+                raise NoSuchElementException
+            else:
+                self.last_find_element_call = [elem_type, name]
+                self.last_elem = ElementMock(elem_type, name, self.elem_visible)
+                return self.last_elem
+
         def close(self):
             self.window_handles.remove(self.switch_to.current_window)
             self.switch_to.current_window = self.window_handles[-1]
@@ -47,7 +57,9 @@ class SeleniumMock:
             self.fullscreen, self.quit_called = False, False
             self.url, self.last_script, self.switch_to = None, None, SwitchTo()
             self.window_handles = [0, 1]
-
+            self.throw_js_error, self.throw_no_such_elem_error = False, False
+            self.last_find_element_call, self.elem_visible = [], True
+            self.last_elem: ElementMock = None
 
     instance = None
 
@@ -56,6 +68,27 @@ class SeleniumMock:
             SeleniumMock.instance = SeleniumMock.__SeleniumMock()
         SeleniumMock.instance.path, SeleniumMock.instance.chrome_options = path, chrome_options
         return SeleniumMock.instance
+
+
+class ElementMock:
+    def __init__(self, elem_type, name, visibility):
+        self.type, self.name, self.visibility = elem_type, name, visibility
+        self.is_displayed_called, self.send_keys_called = False, False
+        self.click_called = False
+
+    def is_displayed(self):
+        self.is_displayed_called = True
+        return self.visibility
+
+    def click(self):
+        self.click_called = True
+
+    def send_keys(self, content):
+        self.send_keys_called = True
+
+
+class By:
+    ID, NAME, CLASS_NAME, CSS_SELECTOR, XPATH, TAG_NAME = 0, 1, 2, 3, 4, 5
 
 
 class ChromeOptions:
@@ -117,16 +150,16 @@ class PeriodicallyCheckMock:
         return self.get_current_time_called
 
 
-class DateTimeMock(datetime):
+class DateTimeMock():
+    def __init__(self, year, month, day, hour, minute, second, ms):
+        self.year, self.month, self.day, self.hour, self.minute, self.second, self.ms = year, month, day, hour, minute, second, ms
+
     @classmethod
     def now(cls):
-        return cls(2018, 12, 31, 23, 59, 59, 999999)
+        return cls(2019, 12, 31, 23, 59, 59, 999999)
 
 
-DatetimeMock = DateTimeMock(2018, 12, 31, 23, 59, 59, 999999)
-
-
-
+DatetimeMock = DateTimeMock(2019, 12, 31, 23, 59, 59, 999999)
 
 if __name__ == "__main__":
     x = SeleniumMock()

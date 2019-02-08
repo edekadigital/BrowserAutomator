@@ -93,17 +93,21 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
     except (NoSuchElementException, NoSuchAttributeException):
         print("element not found: {0} {1}".format(elem_type, name))
         return 1
+    # visible text field
     if not elem.is_displayed() and content:
         js = "{0}{1}('{2}').value={3};".format("javascript:document.", js_types[elem_type], name, content)
         driver.execute_script(js)
+    # invisible text field
     elif content:
         elem.send_keys(content)
     elif elem_type == "xpath":
         js = """document.evaluate("{0}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();""".format(
             name)
         driver.execute_script(js)
+    # button
     elif elem_type == "tag_name":
         elem.click()
+    # invisible button
     else:
         js = "{0}{1}('{2}').click();".format("javascript:document.", js_types[elem_type], name)
         driver.execute_script(js)

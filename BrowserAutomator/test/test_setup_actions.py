@@ -2,6 +2,8 @@ from unittest import TestCase, main
 from unittest.mock import patch
 from BrowserAutomator.setup_actions import *
 from BrowserAutomator.test.mocks import SeleniumMock
+from BrowserAutomator.test import mocks
+from BrowserAutomator import setup_actions
 
 
 class SetupActionsTest(TestCase):
@@ -53,6 +55,7 @@ class SetupActionsTest(TestCase):
         """given a url as `content`, opens the url"""
         load_url(self.driver, self.url_0)
         self.assertEqual(self.url_0, self.driver.url)
+        self.driver.reset()
 
     @patch("BrowserAutomator.setup_actions.load_url", side_effect=lambda driver, content: 0)
     def test_new_tab(self, load_url_mock):
@@ -66,6 +69,7 @@ class SetupActionsTest(TestCase):
         self.assertEqual(0, result)
         load_url_mock.assert_called_with(self.driver, self.url_0)
         self.assertEqual(1, self.driver.switch_to.current_window)
+        self.driver.reset()
 
     def test_switch_tabs(self):
         self.driver.switch_to.throw_window_error = True
@@ -75,6 +79,7 @@ class SetupActionsTest(TestCase):
         result = switch_tabs(self.driver, 0)
         self.assertEqual(None, result)
         self.assertEqual(0, self.driver.switch_to.current_window)
+        self.driver.reset()
 
     @patch("BrowserAutomator.setup_actions.action_on_element")
     def test_interact(self, action_on_element_mock):
@@ -84,10 +89,46 @@ class SetupActionsTest(TestCase):
         call_args = action_on_element_mock.call_args_list
         self.assertEqual((self.driver, 1, 2, 3), list(call_args[0])[0])
         self.assertEqual((self.driver, 4, 5, None), list(call_args[1])[0])
+        self.driver.reset()
+
+    def test_action_on_element_invisible_field(self):
+        setup_actions.By = mocks.By()
+        self.driver.elem_visible = False
+        setup_actions.action_on_element(self.driver, "id", "name", "content")
+        self.assertEqual("javascript:document.getElementById('name').value=content;", self.driver.last_script)
+        self.driver.elem_visible = True
+        self.driver.reset()
+
+    def test_action_on_element_visible_field(self):
+        setup_actions.By = mocks.By()
+        setup_actions.action_on_element(self.driver, "id", "name", "content")
+        self.assertTrue(self.driver.last_elem.send_keys_called)
+        self.driver.reset()
+
+    def test_action_on_element_xpath(self):
+        setup_actions.By = mocks.By()
+        setup_actions.action_on_element(self.driver, "xpath", "name")
+        self.assertEqual("""document.evaluate("name", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();""", self.driver.last_script)
+        self.driver.reset()
+
+    def test_action_on_element_tag(self):
+        setup_actions.By = mocks.By()
+        setup_actions.action_on_element(self.driver, "tag_name", "name")
+        self.assertTrue(self.driver.last_elem.click_called)
+        self.driver.reset()
 
     def test_action_on_element(self):
-        # TODO
-        pass
+        setup_actions.By = mocks.By()
+        setup_actions.action_on_element(self.driver, "id", "name")
+        self.assertTrue("javascruipt:document.getElementById('name').click()", self.driver.last_script)
+        self.driver.reset()
+
+    def test_action_on_element_element_error(self):
+        setup_actions.By = mocks.By()
+        self.driver.throw_no_such_elem_error = True
+        result = setup_actions.action_on_element(self.driver, "id", "name", "content")
+        self.assertEqual(1, result)
+        self.driver.reset()
 
     @patch("BrowserAutomator.setup_actions.actions_from_variable", side_effect=lambda actions: actions)
     @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions: 0)

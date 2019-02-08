@@ -4,10 +4,10 @@ install:
   - pip install .
 script:
   - python -m unittest discover
-# deploy:
-#  provider: pypi
-#  user:
-#  password:
-#    secure:
-#  on:
-#    branch: master
+deploy:
+  provider: pypi
+  user: edekadigital
+  password:
+    secure: vhAWhvMJWwNQ+yYxTEGDmY20oKivf8cnb7xeB2P/3+EF9RX2RRJQAVQy250vOVYJsiVlQATL2rAVpmmEykYL/Ja/z/NA3h5PTQozChvBOcFGUW5t3ZcC5LHrxkZvGwBHRjo6N5zrJXHI8PlCptUSvvVGngwu8cQ24DnWF76wDd+btpljmrYkoQCzPiPFOiEAuDjYoj9iOj0NOZLz9W2k4I+0AxmcUW3TbyUx+4DNgFfGk41sjXA5NK1qclTC/1xLpqnav6bZMb28ELsDHocA3EVsIxYxj6PAVWkG4ZD7IMJAyiAKGzKeKbxl9G9ar+dP940hXGYm1JpU3xOTzwdn+Qp34BiQkm8DymBgzCvsQ4y+grstNXqBbv4F1muvR3qXE4ERxw4XqaP1NWwi4VxKbcuguQC4Zfr9PyATn4NRicvqiBrpRexuvJe4w52u+Oa13RX/DnaMPLrQ63iFtSVF6mHdfaZF2SZubn4P0GFleCCp1vWoN/d/t4RqtP7JXlfWgz/+TtegekDnkaQBRNFUFwvqbNzlLVLO8NYaU17ZjDNTYFZekDiV3zUX3bUry2s2m5pBbqptFiNRQeGfJ9M5z0v0b9UlETpgOw34aJyJFxCe66j4C450VfqMcFrGa2e93CYE4oMXe5o869gQdBvQWX1goTPKuotcfFlx8LO7aN8=
+  on:
+    branch: master

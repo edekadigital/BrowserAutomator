@@ -1,9 +1,9 @@
 from unittest import TestCase, main
 from unittest.mock import patch
-from BrowserAutomator.loop_actions import *
+from BrowserAutomator import loop_actions
 from BrowserAutomator.test.mocks import LoopObjMock, SeleniumMock, PeriodicallyCheckMock, DatetimeMock
 
-datetime = DatetimeMock
+loop_actions.datetime = DatetimeMock
 
 
 class LoopActionsTest(TestCase):
@@ -11,41 +11,42 @@ class LoopActionsTest(TestCase):
     driver = SeleniumMock()
     content = [{"seconds": 2}]
 
-    @patch("BrowserAutomator.loop_actions.get_actions", side_effect=lambda filename, all_actions: [(lambda x: x + "_1", "content")])
+    @patch("BrowserAutomator.loop_actions.get_actions",
+           side_effect=lambda filename, all_actions: [(lambda x: x + "_1", "content")])
     def test_get_action_objects(self, get_actions_mock):
-        result = get_action_objects(self.filename)
+        result = loop_actions.get_action_objects(self.filename)
         self.assertEqual(["content_1"], result)
-        get_actions_mock.assert_called_with(self.filename, {'repeat every': RepeatEvery, 'fix wifi': WifiFixer, 'switch tabs': TabSwitcher})
+        get_actions_mock.assert_called_with(self.filename, {'repeat every': loop_actions.RepeatEvery,
+                                                            'fix wifi': loop_actions.WifiFixer,
+                                                            'switch tabs': loop_actions.TabSwitcher})
 
     @patch("BrowserAutomator.loop_actions.sleep")
     @patch("BrowserAutomator.loop_actions.get_action_objects", side_effect=lambda filename: [LoopObjMock()])
     def test_loop_runner(self, get_action_objects_mock, sleep_mock):
-        result = loop_runner(self.driver, self.filename, self.setup_filename)
+        result = loop_actions.loop_runner(self.driver, self.filename, self.setup_filename)
         get_action_objects_mock.assert_called_with(self.filename)
         self.assertEqual(self.driver, LoopObjMock().driver)
         self.assertEqual(self.setup_filename, LoopObjMock().filename)
 
     def test_reset(self):
-        reset(self.driver)
+        loop_actions.reset(self.driver)
         self.assertEqual([0], self.driver.window_handles)
         self.driver.reset()
 
     def test_check_criteria(self):
-        obj, mock_obj = PeriodicallyCheck(self.content), PeriodicallyCheckMock()
+        obj, mock_obj = loop_actions.PeriodicallyCheck(self.content), PeriodicallyCheckMock()
         obj.get_current_time = mock_obj.get_current_time
         self.assertFalse(obj.check_criteria())
         self.assertTrue(obj.check_criteria())
 
-    @patch("BrowserAutomator.loop_actions.datetime", side_effect=DatetimeMock)
-    def test_get_current_time(self, datetime_mock):
-        """ TODO
-        obj = PeriodicallyCheck(self.content)
-        print(obj.get_current_time("hours"))"""
-        pass
+    def test_get_current_time(self):
+        obj = loop_actions.PeriodicallyCheck(self.content)
+        result = [obj.get_current_time("days"), obj.get_current_time("hours"), obj.get_current_time("minutes")]
+        self.assertEqual([31, 23, 59], result)
 
     @patch("BrowserAutomator.loop_actions.switch_tabs", side_effect=lambda driver, tab: True)
     def test_tabswitcher(self, switch_tabs_mock):
-        obj = TabSwitcher(self.content)
+        obj = loop_actions.TabSwitcher(self.content)
         obj.check_criteria = lambda: False
         self.assertIsNone(obj.run_task(self.driver, self.setup_filename))
         obj.check_criteria = lambda: True
@@ -55,7 +56,7 @@ class LoopActionsTest(TestCase):
     @patch("BrowserAutomator.loop_actions.check_network_not_working", side_effect=lambda: True)
     @patch("BrowserAutomator.loop_actions.action_runner", side_effect=lambda driver, tab: True)
     def test_wifi_fixer(self, action_runner_mock, network_check_mock):
-        obj = WifiFixer(self.content)
+        obj = loop_actions.WifiFixer(self.content)
         obj.check_criteria = lambda: False
         self.assertIsNone(obj.run_task(self.driver, self.setup_filename))
         obj.check_criteria = lambda: True
@@ -65,7 +66,7 @@ class LoopActionsTest(TestCase):
 
     @patch("BrowserAutomator.loop_actions.action_runner", side_effect=lambda driver, tab: True)
     def test_repeat_every(self, action_runner_mock):
-        obj = RepeatEvery(self.content)
+        obj = loop_actions.RepeatEvery(self.content)
         obj.check_criteria = lambda: False
         self.assertIsNone(obj.run_task(self.driver, self.setup_filename))
         obj.check_criteria = lambda: True

@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
     name="BrowserAutomator",
     version="1.0.0",
-    author="Edeka Digital",
+    author="EDEKA DIGITAL",
     description="A package to simplify browser automation",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -18,9 +18,11 @@ setup(
         "ruamel.yaml",
         "requests",
     ],
-    python_requires='>=3.3',
+    python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
     exclude=["config"]
 )
