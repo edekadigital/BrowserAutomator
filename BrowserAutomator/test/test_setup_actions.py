@@ -7,7 +7,7 @@ from BrowserAutomator import setup_actions
 
 
 class SetupActionsTest(TestCase):
-    filename = "filename"
+    filenames = ["filename"]
     url_0 = "https://testsite_0.com"
     url_1 = "https://testsite_1.com"
     all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
@@ -17,9 +17,9 @@ class SetupActionsTest(TestCase):
 
     @patch("BrowserAutomator.setup_actions.get_actions", side_effect=lambda filename, all_actions: True)
     def test_actions_from_file(self, get_actions_mock):
-        result = actions_from_file(self.filename)
+        result = actions_from_file(self.filenames)
         self.assertTrue(result)
-        get_actions_mock.assert_called_with(self.filename, self.all_actions)
+        get_actions_mock.assert_called_with(self.filenames, self.all_actions)
 
     @patch("BrowserAutomator.setup_actions.get_action_functions", side_effect=lambda variables, all_actions: True)
     def test_actions_from_variable(self, get_action_functions_mock):
@@ -36,16 +36,16 @@ class SetupActionsTest(TestCase):
     @patch("BrowserAutomator.setup_actions.actions_from_file",
            side_effect=lambda filename: [(lambda driver, content: None, "a")])
     def test_action_runner_good(self, actions_from_file_mock):
-        result = action_runner(self.driver, self.filename)
+        result = action_runner(self.driver, self.filenames)
         self.assertEqual(None, result)
-        actions_from_file_mock.assert_called_with(self.filename)
+        actions_from_file_mock.assert_called_with(self.filenames[0])
 
     @patch("BrowserAutomator.setup_actions.actions_from_file",
            side_effect=lambda filename: [(lambda driver, content: 1, "a")])
     def test_action_runner_bad(self, actions_from_file_mock):
-        result = action_runner(self.driver, self.filename)
+        result = action_runner(self.driver, self.filenames)
         self.assertEqual(1, result)
-        actions_from_file_mock.assert_called_with(self.filename)
+        actions_from_file_mock.assert_called_with(self.filenames[0])
 
     @patch("BrowserAutomator.setup_actions.sleep")
     def test_wait(self, sleep_mock):

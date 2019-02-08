@@ -7,24 +7,24 @@ loop_actions.datetime = DatetimeMock
 
 
 class LoopActionsTest(TestCase):
-    filename, setup_filename = "filename", "setup_filename"
+    filenames, setup_filename = ["filename"], "setup_filename"
     driver = SeleniumMock()
     content = [{"seconds": 2}]
 
     @patch("BrowserAutomator.loop_actions.get_actions",
            side_effect=lambda filename, all_actions: [(lambda x: x + "_1", "content")])
     def test_get_action_objects(self, get_actions_mock):
-        result = loop_actions.get_action_objects(self.filename)
+        result = loop_actions.get_action_objects(self.filenames)
         self.assertEqual(["content_1"], result)
-        get_actions_mock.assert_called_with(self.filename, {'repeat every': loop_actions.RepeatEvery,
-                                                            'fix wifi': loop_actions.WifiFixer,
-                                                            'switch tabs': loop_actions.TabSwitcher})
+        get_actions_mock.assert_called_with(self.filenames[0], {'repeat every': loop_actions.RepeatEvery,
+                                                                'fix wifi': loop_actions.WifiFixer,
+                                                                'switch tabs': loop_actions.TabSwitcher})
 
     @patch("BrowserAutomator.loop_actions.sleep")
     @patch("BrowserAutomator.loop_actions.get_action_objects", side_effect=lambda filename: [LoopObjMock()])
     def test_loop_runner(self, get_action_objects_mock, sleep_mock):
-        result = loop_actions.loop_runner(self.driver, self.filename, self.setup_filename)
-        get_action_objects_mock.assert_called_with(self.filename)
+        result = loop_actions.loop_runner(self.driver, self.filenames, self.setup_filename)
+        get_action_objects_mock.assert_called_with(self.filenames)
         self.assertEqual(self.driver, LoopObjMock().driver)
         self.assertEqual(self.setup_filename, LoopObjMock().filename)
 

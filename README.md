@@ -6,8 +6,9 @@ Using pip for Python 3:
 `pip install BrowserAutomator`
 
 ## Configuration
-#### setup.yml
-In this file you can specify actions that are run when the utility is started
+#### setup yml
+In these files you can specify actions that are run in the given order when the utility is started.
+
 The following actions are available:
 - `wait`: given a time unit (seconds, minutes, hours, days) and an amount of time, blockingly waits for the amount of time
 - `load`: given an url, opens the site in the current tab
@@ -19,15 +20,15 @@ The following actions are available:
 
 - `for_every`: given a list of `urls` and a list of `actions`, runs the actions on every url. Urls in `load` and `new_tab` actions are replaced by the current url
 
-#### loop.yml
-In this file you can specify actions that loop after the setup ran once.
+#### loop yml
+In these files you can specify actions that loop after the setup ran once.
 The following actions are available:
-- `repeat every`: given a time unit (seconds, minutes, hours, days) and an amount of time, repeats the setup every n seconds/minutes/...
+- `repeat every`: given a time unit (seconds, minutes, hours, days) and an amount of time, restarts the script every n seconds/minutes/...
 - `fix wifi`: given a time unit and an amount of time, checks every n seconds/minutes/... if the network is working, and restarts the script if it doesn't
 - `switch tabs`: given a time unit and an amount of time, switches the next tab every n seconds/minutes/... If the last tab is reached, it goes back to the first
 
 ## Usage
 In Python:
 - `from BrowserAutomator.setup import run`
-- `run(your_setup_yml_filename, your_loop_yml_filename, your_chromedriver_path)`
+- `run([your_setup_yml_filenames], [your_loop_yml_filenames], your_chromedriver_path)`
 the default Chromedriver path is "/usr/lib/chromium-browser/chromedriver"

@@ -6,7 +6,7 @@ from BrowserAutomator.runner import get_actions, get_action_functions
 
 
 def actions_from_file(filename):
-    """reads the setup.yml file
+    """reads the given file
        returns a list of tuples of all the functions specified inside the setup file with their parameters"""
     all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
                    "for every": for_every}
@@ -31,11 +31,12 @@ def run_functions(driver, actions):
             return 1
 
 
-def action_runner(driver, filename):
+def action_runner(driver, filenames):
     """gets the action function-parameter tuples and runs them"""
-    actions = actions_from_file(filename)
-    if run_functions(driver, actions) == 1:
-        return 1
+    for filename in filenames:
+        actions = actions_from_file(filename)
+        if run_functions(driver, actions) == 1:
+            return 1
 
 
 def wait(driver, content):
