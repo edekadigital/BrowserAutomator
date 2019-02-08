@@ -18,7 +18,7 @@ setup(
         "ruamel.yaml",
         "requests",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.3',
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

@@ -33,13 +33,15 @@ class SetupActionsTest(TestCase):
         result = run_functions(self.driver, self.actions[1:])
         self.assertEqual(1, result)
 
-    @patch("BrowserAutomator.setup_actions.actions_from_file", side_effect=lambda filename: [(lambda driver, content: None, "a")])
+    @patch("BrowserAutomator.setup_actions.actions_from_file",
+           side_effect=lambda filename: [(lambda driver, content: None, "a")])
     def test_action_runner_good(self, actions_from_file_mock):
         result = action_runner(self.driver, self.filename)
         self.assertEqual(None, result)
         actions_from_file_mock.assert_called_with(self.filename)
 
-    @patch("BrowserAutomator.setup_actions.actions_from_file", side_effect=lambda filename: [(lambda driver, content: 1, "a")])
+    @patch("BrowserAutomator.setup_actions.actions_from_file",
+           side_effect=lambda filename: [(lambda driver, content: 1, "a")])
     def test_action_runner_bad(self, actions_from_file_mock):
         result = action_runner(self.driver, self.filename)
         self.assertEqual(1, result)
@@ -49,7 +51,7 @@ class SetupActionsTest(TestCase):
     def test_wait(self, sleep_mock):
         content = [{"days": 1}]
         wait(self.driver, content)
-        sleep_mock.assert_called_with(1*24*60*60)
+        sleep_mock.assert_called_with(1 * 24 * 60 * 60)
 
     def test_load_url(self):
         """given a url as `content`, opens the url"""
@@ -108,7 +110,9 @@ class SetupActionsTest(TestCase):
     def test_action_on_element_xpath(self):
         setup_actions.By = mocks.By()
         setup_actions.action_on_element(self.driver, "xpath", "name")
-        self.assertEqual("""document.evaluate("name", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();""", self.driver.last_script)
+        self.assertEqual(
+            """document.evaluate("name", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();""",
+            self.driver.last_script)
         self.driver.reset()
 
     def test_action_on_element_tag(self):
@@ -132,15 +136,29 @@ class SetupActionsTest(TestCase):
 
     @patch("BrowserAutomator.setup_actions.actions_from_variable", side_effect=lambda actions: actions)
     @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions: 0)
-    def test_for_every(self, run_functions_mock, actions_from_variable_mock):
-        # TODO
+    def test_for_every_good(self, run_functions_mock, actions_from_variable_mock):
         content = {"urls": [self.url_0, self.url_1],
                    "actions": [
                        {"load": ""}
                    ]}
         result = for_every(self.driver, content)
-        # self.assertEqual(None, result)
-        # print(run_functions_mock.call_args_list)
+        self.assertEqual(None, result)
+        self.assertEqual(actions_from_variable_mock.call_args_list[0][0][0], [{'load': self.url_0}])
+        self.assertEqual(actions_from_variable_mock.call_args_list[1][0][0], [{'new_tab': self.url_1}])
+        self.assertEqual((self.driver, [{'load': self.url_0}]), run_functions_mock.call_args_list[0][:1][0])
+        self.assertEqual((self.driver, [{'new_tab': self.url_1}]), run_functions_mock.call_args_list[1][:1][0])
+
+    @patch("BrowserAutomator.setup_actions.actions_from_variable", side_effect=lambda actions: actions)
+    @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions: 1)
+    def test_for_every_bad(self, run_functions_mock, actions_from_variable_mock):
+        content = {"urls": [self.url_0, self.url_1],
+                   "actions": [
+                       {"load": ""}
+                   ]}
+        result = for_every(self.driver, content)
+        self.assertEqual(1, result)
+        self.assertEqual(actions_from_variable_mock.call_args_list[0][0][0], [{'load': self.url_0}])
+        self.assertEqual((self.driver, [{'load': self.url_0}]), run_functions_mock.call_args_list[0][:1][0])
 
 
 if __name__ == '__main__':

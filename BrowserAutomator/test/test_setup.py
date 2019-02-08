@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import patch
-from BrowserAutomator.setup import setup
+from BrowserAutomator.setup import setup, setup_caller
 from BrowserAutomator.test.mocks import SeleniumMock
 
 
@@ -41,9 +41,12 @@ class SetupTest(TestCase):
         action_runner_mock.assert_called_with(self.driver, filename=self.setup_file)
         loop_runner_mock.assert_called_with(self.driver, filename= self.loop_file, setup_filename=self.setup_file)
 
-    def test_run(self):
-        # TODO
-        pass
+    @patch("BrowserAutomator.setup.sleep")
+    @patch("BrowserAutomator.setup.setup")
+    def test_setup_caller(self, setup_mock, sleep_mock):
+        setup_caller(self.setup_file, self.loop_file, self.chromedriver_path)
+        setup_mock.assert_called_with(self.setup_file, self.loop_file, self.chromedriver_path)
+        sleep_mock.assert_called_with(30)
 
 
 if __name__ == '__main__':

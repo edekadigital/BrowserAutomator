@@ -16,7 +16,11 @@ def setup(setup_filename, loop_filename, chromedriver_path="/usr/lib/chromium-br
     return out
 
 
-def run(setup_filename, loop_filename):
+def setup_caller(setup_filename, loop_filename, chromedriver_path):
+    setup(setup_filename, loop_filename, chromedriver_path)
+    sleep(30)
+
+
+def run(setup_filename, loop_filename, chromedriver_path="/usr/lib/chromium-browser/chromedriver"):
     while True:
-        setup(setup_filename, loop_filename)
-        sleep(30)
+        setup_caller(setup_filename, loop_filename, chromedriver_path)

@@ -117,16 +117,18 @@ def for_every(driver, content):
     """given a list of urls and a list of actions
        executes all of the actions for each url"""
     urls, actions = content["urls"], content["actions"]
+    all_actions = []
     for i in range(len(urls)):
         # injecting the current url into load/net_tab actions
         for action in actions:
-            for action_type, content in action.items():
-                if action_type == "load" or action_type == "new_tab":
-                    if i > 0:
-                        action.pop(action_type)
-                        action["new_tab"] = urls[i]
-                    else:
-                        action[action_type] = urls[i]
-        functions = actions_from_variable(actions)
+            action_type, content = next(iter(action.items()))
+            if action_type == "load" or action_type == "new_tab":
+                if i > 0:
+                    action.pop(action_type)
+                    action["new_tab"] = urls[i]
+                else:
+                    action[action_type] = urls[i]
+        all_actions.append([dict(action) for action in actions])
+        functions = actions_from_variable(all_actions[-1])
         if run_functions(driver, functions) == 1:
             return 1
