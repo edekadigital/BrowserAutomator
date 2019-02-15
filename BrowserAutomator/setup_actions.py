@@ -33,10 +33,14 @@ def run_functions(driver, actions):
 
 def action_runner(driver, filenames):
     """gets the action function-parameter tuples and runs them"""
-    for filename in filenames:
-        actions = actions_from_file(filename)
-        if run_functions(driver, actions) == 1:
-            return 1
+    if type(filenames) == str:
+        actions = actions_from_file(filenames)
+        return run_functions(driver, actions)
+    else:
+        for filename in filenames:
+            actions = actions_from_file(filename)
+            if run_functions(driver, actions) == 1:
+                return 1
 
 
 def wait(driver, content):

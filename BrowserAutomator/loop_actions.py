@@ -8,9 +8,12 @@ from time import sleep
 def get_action_objects(filenames):
     """reads the actions from all yml files given in `filenames` and returns the objects specified in it"""
     all_actions = {'repeat every': RepeatEvery, 'fix wifi': WifiFixer, 'switch tabs': TabSwitcher}
-    actions = []
-    for filename in filenames:
-        actions += get_actions(filename, all_actions)
+    if type(filenames) == str:
+        actions = get_actions(filenames, all_actions)
+    else:
+        actions = []
+        for filename in filenames:
+            actions += get_actions(filename, all_actions)
     # create all objects
     all_objs = [obj(content) for obj, content in actions]
     return all_objs

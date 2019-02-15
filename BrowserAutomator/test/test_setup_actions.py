@@ -36,7 +36,12 @@ class SetupActionsTest(TestCase):
     @patch("BrowserAutomator.setup_actions.actions_from_file",
            side_effect=lambda filename: [(lambda driver, content: None, "a")])
     def test_action_runner_good(self, actions_from_file_mock):
+        # testing list of filenames
         result = action_runner(self.driver, self.filenames)
+        self.assertEqual(None, result)
+        actions_from_file_mock.assert_called_with(self.filenames[0])
+        # testing string for filename
+        result = action_runner(self.driver, self.filenames[0])
         self.assertEqual(None, result)
         actions_from_file_mock.assert_called_with(self.filenames[0])
 

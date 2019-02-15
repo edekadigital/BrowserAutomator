@@ -14,11 +14,16 @@ class LoopActionsTest(TestCase):
     @patch("BrowserAutomator.loop_actions.get_actions",
            side_effect=lambda filename, all_actions: [(lambda x: x + "_1", "content")])
     def test_get_action_objects(self, get_actions_mock):
+        all_actions = {'repeat every': loop_actions.RepeatEvery, 'fix wifi': loop_actions.WifiFixer,
+                       'switch tabs': loop_actions.TabSwitcher}
+        # testing list of filenames
         result = loop_actions.get_action_objects(self.filenames)
         self.assertEqual(["content_1"], result)
-        get_actions_mock.assert_called_with(self.filenames[0], {'repeat every': loop_actions.RepeatEvery,
-                                                                'fix wifi': loop_actions.WifiFixer,
-                                                                'switch tabs': loop_actions.TabSwitcher})
+        get_actions_mock.assert_called_with(self.filenames[0], all_actions)
+        # testing string for filename
+        result = loop_actions.get_action_objects(self.filenames[0])
+        self.assertEqual(["content_1"], result)
+        get_actions_mock.assert_called_with(self.filenames[0], all_actions)
 
     @patch("BrowserAutomator.loop_actions.sleep")
     @patch("BrowserAutomator.loop_actions.get_action_objects", side_effect=lambda filename: [LoopObjMock()])
