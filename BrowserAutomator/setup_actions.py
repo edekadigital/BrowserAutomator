@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, NoSuchAttributeException, NoSuchWindowException, JavascriptException
+from selenium.common.exceptions import NoSuchElementException, NoSuchAttributeException, NoSuchWindowException, \
+    JavascriptException
 from selenium import webdriver
 from time import sleep
 from BrowserAutomator.runner import get_actions, get_action_functions
@@ -8,8 +9,8 @@ from BrowserAutomator.runner import get_actions, get_action_functions
 def actions_from_file(filename):
     """reads the given file
        returns a list of tuples of all the functions specified inside the setup file with their parameters"""
-    all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
-                   "for every": for_every}
+    all_actions = {"zoom": zoom, "wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs,
+                   "interact": interact, "for every": for_every}
     actions = get_actions(filename, all_actions)
     return actions
 
@@ -41,6 +42,10 @@ def action_runner(driver, filenames):
             actions = actions_from_file(filename)
             if run_functions(driver, actions) == 1:
                 return 1
+
+
+def zoom(driver, content):
+    driver.execute_script("document.body.style.zoom = '{0}';".format(content))
 
 
 def wait(driver, content):

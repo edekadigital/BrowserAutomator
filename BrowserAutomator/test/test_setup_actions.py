@@ -52,6 +52,10 @@ class SetupActionsTest(TestCase):
         self.assertEqual(1, result)
         actions_from_file_mock.assert_called_with(self.filenames[0])
 
+    def test_zoom(self):
+        zoom(self.driver, "50%")
+        self.assertEqual("document.body.style.zoom = '50%';", self.driver.last_script)
+
     @patch("BrowserAutomator.setup_actions.sleep")
     def test_wait(self, sleep_mock):
         content = [{"days": 1}]
