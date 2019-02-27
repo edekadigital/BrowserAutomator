@@ -5,12 +5,16 @@ from selenium import webdriver
 from time import sleep
 from BrowserAutomator.runner import get_actions, get_action_functions
 
+def get_all_actions():
+    all_actions = {"zoom": zoom, "wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs,
+                   "interact": interact, "for every": for_every}
+    return all_actions
+
 
 def actions_from_file(filename):
     """reads the given file
        returns a list of tuples of all the functions specified inside the setup file with their parameters"""
-    all_actions = {"zoom": zoom, "wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs,
-                   "interact": interact, "for every": for_every}
+    all_actions = get_all_actions()
     actions = get_actions(filename, all_actions)
     return actions
 
@@ -18,8 +22,7 @@ def actions_from_file(filename):
 def actions_from_variable(actions):
     """given a list of actions
        returns a list of tuples of all the functions specified inside the actions list with their parameters"""
-    all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
-                   "for every": for_every}
+    all_actions = get_all_actions()
     actions = get_action_functions(actions, all_actions)
     return actions
 

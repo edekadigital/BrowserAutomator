@@ -10,7 +10,7 @@ class SetupActionsTest(TestCase):
     filenames = ["filename"]
     url_0 = "https://testsite_0.com"
     url_1 = "https://testsite_1.com"
-    all_actions = {"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
+    all_actions = {"zoom": zoom,"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
                    "for every": for_every}
     driver = SeleniumMock()
     actions = [(lambda driver, content: None, "a"), (lambda driver, content: 1, "b")]
