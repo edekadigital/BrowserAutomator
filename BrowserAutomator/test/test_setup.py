@@ -6,6 +6,7 @@ from BrowserAutomator.test.mocks import SeleniumMock
 
 class SetupTest(TestCase):
     setup_files, loop_files, chromedriver_path = ["setup_file"], ["loop_file"], "path"
+    log_path, log_level = "log_path", "log_level"
     driver = SeleniumMock()
 
     @patch("BrowserAutomator.setup.selenium_setup", side_effect=SeleniumMock)
@@ -44,8 +45,9 @@ class SetupTest(TestCase):
     @patch("BrowserAutomator.setup.sleep")
     @patch("BrowserAutomator.setup.setup")
     def test_setup_caller(self, setup_mock, sleep_mock):
-        setup_caller(self.setup_files, self.loop_files, self.chromedriver_path)
-        setup_mock.assert_called_with(self.setup_files, self.loop_files, self.chromedriver_path)
+        setup_caller(self.setup_files, self.loop_files, self.chromedriver_path, self.log_path, self.log_level)
+        setup_mock.assert_called_with(self.setup_files, self.loop_files, self.chromedriver_path, self.log_path,
+                                      self.log_level)
         sleep_mock.assert_called_with(30)
 
 

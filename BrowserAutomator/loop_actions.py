@@ -2,7 +2,10 @@ from datetime import datetime
 from BrowserAutomator.network import check_network_not_working
 from BrowserAutomator.setup_actions import switch_tabs, action_runner
 from BrowserAutomator.runner import get_actions
+from logging import getLogger
 from time import sleep
+
+logger = getLogger(__name__)
 
 
 def get_action_objects(filenames):
@@ -84,6 +87,6 @@ class RepeatEvery(PeriodicallyCheck):
     """runs the setup every_n time_units"""
     def run_task(self, driver, setup_filenames):
         if self.check_criteria():
-            print("repeating")
+            logger.info("restarting the setup")
             reset(driver)
             return action_runner(driver, setup_filenames)

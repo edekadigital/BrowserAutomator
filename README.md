@@ -28,8 +28,18 @@ The following actions are available:
 - `fix wifi`: given a time unit and an amount of time, checks every n seconds/minutes/... if the network is working, and restarts the script if it doesn't
 - `switch tabs`: given a time unit and an amount of time, switches the next tab every n seconds/minutes/... If the last tab is reached, it goes back to the first
 
+## Logging
+if you want to change the predefined logging behavior, change the parameters 'log_path' and 'log_level' in your call to the 'run' function.
+- `log_path` can be any valid path including filename or None (this disables logging to a file). The default is "/tmp/BrowserAutomator.log"
+- `log_level` can be any logging level provided by the logging library, or None (this disables logging by the library completely). The default is "logging.ERROR"
+
 ## Usage
 In Python:
 - `from BrowserAutomator.setup import run`
-- `run([your_setup_yml_filenames], [your_loop_yml_filenames], your_chromedriver_path)`
+- `run([your_setup_yml_filenames], [your_loop_yml_filenames], your_chromedriver_path, log_path=your_log_path, log_level=your_log_level)`
+
 the default Chromedriver path is "/usr/lib/chromium-browser/chromedriver"
+
+the default log path is "/tmp/BrowserAutomator.log"
+
+the default log level is logging.ERROR

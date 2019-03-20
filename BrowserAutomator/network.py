@@ -1,4 +1,7 @@
 from requests import get
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 def check_network_not_working():
@@ -11,7 +14,7 @@ def check_network_not_working():
             response = True
     except:
         response = True
-    print("network not available" if response else "network available")
+    logger.info("network not available" if response else "network available")
     return response
 
 

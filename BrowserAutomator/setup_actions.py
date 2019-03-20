@@ -3,7 +3,11 @@ from selenium.common.exceptions import NoSuchElementException, NoSuchAttributeEx
     JavascriptException
 from selenium import webdriver
 from time import sleep
+from logging import getLogger
 from BrowserAutomator.runner import get_actions, get_action_functions
+
+logger = getLogger(__name__)
+
 
 def get_all_actions():
     all_actions = {"zoom": zoom, "wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs,
@@ -31,7 +35,7 @@ def run_functions(driver, actions):
     """given a list of function-parameter tuples, runs each function"""
     for func, content in actions:
         if func(driver, content) == 1:
-            print("function {0} failed to execute with content: {1}".format(func, content))
+            logger.error("function {0} failed to execute with content: {1}".format(func, content))
             return 1
 
 
@@ -69,6 +73,7 @@ def new_tab(driver: webdriver.Chrome, content):
     try:
         driver.execute_script("window.open('about:blank','_blank');")
     except JavascriptException:
+        logger.error("Failure opening a new tab")
         return 1
     driver.switch_to.window(driver.window_handles[0])
     driver.switch_to.window(driver.window_handles[-1])
@@ -82,6 +87,7 @@ def switch_tabs(driver: webdriver.Chrome, content):
         try:
             driver.switch_to.window(windows[content])
         except NoSuchWindowException:
+            logger.error("Failure switching tabs", exc_info=True)
             return 1
 
 
@@ -91,7 +97,7 @@ def interact(driver, content):
         interaction_content = action.get('content', None)
         result = action_on_element(driver, action['type'], action['name'], interaction_content)
         if result == 1:
-            print("interaction failed")
+            logger.debug("interaction failed")
             return 1
 
 
@@ -104,7 +110,7 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
     try:
         elem = driver.find_element(types[elem_type], name)
     except (NoSuchElementException, NoSuchAttributeException):
-        print("element not found: {0} {1}".format(elem_type, name))
+        logger.error("element not found: {0} {1}".format(elem_type, name))
         return 1
     # visible text field
     if not elem.is_displayed() and content:
