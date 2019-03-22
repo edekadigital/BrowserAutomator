@@ -6,7 +6,7 @@ from logging import ERROR
 from time import sleep
 
 
-def setup(setup_filenames, loop_filename, chromedriver_path="/usr/lib/chromium-browser/chromedriver",
+def setup(setup_filenames, loop_filename, chromedriver_path="/usr/bin/chromedriver",
           log_path="/tmp/BrowserAutomator.log",
           log_level=ERROR):
     """starts the selenium session and executes the actions
@@ -26,7 +26,7 @@ def setup_caller(setup_filename, loop_filename, chromedriver_path, log_path, log
     sleep(30)
 
 
-def run(setup_filename, loop_filename, chromedriver_path="/usr/lib/chromium-browser/chromedriver",
+def run(setup_filename, loop_filename, chromedriver_path="/usr/bin/chromedriver",
         log_path="/tmp/BrowserAutomator.log", log_level=None):
     while True:
         setup_caller(setup_filename, loop_filename, chromedriver_path, log_path, log_level)

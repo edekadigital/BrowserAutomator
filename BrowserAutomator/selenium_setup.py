@@ -1,7 +1,7 @@
 from selenium.webdriver import ChromeOptions, Chrome
 
 
-def selenium_setup(chromedriver_path="/usr/lib/chromium-browser/chromedriver", fullscreen=True):
+def selenium_setup(chromedriver_path="/usr/bin/chromedriver", fullscreen=True):
     """starts a selenium chrome browser session with disabled infobars (and optionally in fullscreen)
        returns the driver"""
     chrome_options = ChromeOptions()

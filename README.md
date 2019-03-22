@@ -38,7 +38,7 @@ In Python:
 - `from BrowserAutomator.setup import run`
 - `run([your_setup_yml_filenames], [your_loop_yml_filenames], your_chromedriver_path, log_path=your_log_path, log_level=your_log_level)`
 
-the default Chromedriver path is "/usr/lib/chromium-browser/chromedriver"
+the default Chromedriver path is "/usr/bin/chromedriver"
 
 the default log path is "/tmp/BrowserAutomator.log"
 
