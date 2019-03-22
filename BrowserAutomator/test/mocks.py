@@ -161,6 +161,46 @@ class DateTimeMock():
 
 DatetimeMock = DateTimeMock(2019, 12, 31, 23, 59, 59, 999999)
 
+
+class KeyMock:
+    class __KeyMock:
+        def __init__(self):
+            pass
+
+        def publickey(self):
+            return KeyMock()
+
+        def exportKey(self):
+            return "key"
+
+    instance = None
+
+    def __new__(cls):
+        if not KeyMock.instance:
+            KeyMock.instance = KeyMock.__KeyMock()
+        return KeyMock.instance
+
+
+class OAEPMock:
+    # class __OAEPMock:
+    def __init__(self):
+        self.key = None
+
+    def new(self, key):
+        self.key = key
+        return self.Cipher()
+
+    class Cipher:
+        def __init__(self):
+            pass
+
+        def encrypt(self, cleartext):
+            return b"encrypted" + cleartext
+
+        def decrypt(self, encrypted_text):
+            return b"decrypted" + bytes(encrypted_text, "utf-8")
+
+
 if __name__ == "__main__":
     x = SeleniumMock()
     y = SeleniumMock()

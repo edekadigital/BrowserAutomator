@@ -15,7 +15,7 @@ The following actions are available:
 - `load`: given an url, opens the site in the current tab
 - `new_tab`: given an url, opens the site in a new tab
 - `switch_tabs`: given the index of a tab, switches to the specified tab
-- `interact`: given the `type` of an html element and its `name` (and `content`), the element gets clicked on if no `content` tag is given. Otherwise it get treated like a text field and the `content` is used as input
+- `interact`: given the `type` of an html element and its `name` (and `content`), the element gets clicked on if no `content` tag is given. Otherwise it get treated like a text field and the `content` is used as input. If you want to use encryption (e.g. passwords) look at the "Encryption" chapter down below 
 
    The following types are available: `id`, `name`, `class`, `css`, `xpath`, `tag_name`
 
@@ -27,6 +27,37 @@ The following actions are available:
 - `repeat every`: given a time unit (seconds, minutes, hours, days) and an amount of time, restarts the script every n seconds/minutes/...
 - `fix wifi`: given a time unit and an amount of time, checks every n seconds/minutes/... if the network is working, and restarts the script if it doesn't
 - `switch tabs`: given a time unit and an amount of time, switches the next tab every n seconds/minutes/... If the last tab is reached, it goes back to the first
+
+
+## Encryption
+In certain cases it is desired not to store plain text, for example when you want to enter passwords with BrowserAutomator.
+In this case BrowserAutomator has the possibility of using RSA encryption with a public and an private key.
+### Generating the keys
+To generate both keys needed, you can use the following function:
+`BrowserAutomator.cipher_util.key_generator(private_key_path, public_key_path, key_length=1024)`
+
+This creates by default a 1024 bit RSA key pair using the "pycrypto" library and writes the generated keys to the given paths. If desired you can also use any other key generator.
+
+### Encrypting the content
+To encrypt a string you can use:
+ - `BrowserAutomator.cipher_util.encrypt(public_key_path, clear_text)` function which encrypts the clear_text using the given public key and returns the encrypted bytes
+ - `BrowserAutomator.cipher_util.write_encrypted(output_file_path, public_key_path, clear_text)` which writes the result to the specified path
+ 
+ The only supported encryption protocol is RSAES-OAEP. 
+ 
+ You have to save the encrypted result as a file in order to use it with BrowserAutomator.
+
+### Unsing the content within interaction actions
+To use the encrypted data in the interact action you have to use the following syntax:
+```
+- interact:
+    - type: *like specified above*
+      name: *like specified above*
+      content:
+        private_key_path: *path to your private key*
+        encrypted_file_path: *path to the file with encrypted content*
+```
+
 
 ## Logging
 if you want to change the predefined logging behavior, change the parameters 'log_path' and 'log_level' in your call to the 'run' function.

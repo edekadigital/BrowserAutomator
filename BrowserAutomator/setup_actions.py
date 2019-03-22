@@ -5,6 +5,7 @@ from selenium import webdriver
 from time import sleep
 from logging import getLogger
 from BrowserAutomator.runner import get_actions, get_action_functions
+from BrowserAutomator.cipher_util import decrypt_content
 
 logger = getLogger(__name__)
 
@@ -112,13 +113,20 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None):
     except (NoSuchElementException, NoSuchAttributeException):
         logger.error("element not found: {0} {1}".format(elem_type, name))
         return 1
-    # visible text field
-    if not elem.is_displayed() and content:
-        js = "{0}{1}('{2}').value={3};".format("javascript:document.", js_types[elem_type], name, content)
-        driver.execute_script(js)
-    # invisible text field
-    elif content:
-        elem.send_keys(content)
+    # text field events
+    if content:
+        if type(content) == list or type(content) == dict:
+            # cipher stuff
+            content = decrypt_content(content)
+        # visible text field
+        if not elem.is_displayed():
+            js = "{0}{1}('{2}').value={3};".format("javascript:document.", js_types[elem_type], name, content)
+            driver.execute_script(js)
+        # invisible text field
+        else:
+            elem.send_keys(content)
+
+    # click events
     elif elem_type == "xpath":
         js = """document.evaluate("{0}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();""".format(
             name)

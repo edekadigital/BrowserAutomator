@@ -5,7 +5,6 @@ from BrowserAutomator.file_reader import read_actions
 from BrowserAutomator.test.mocks import YamlMock
 
 
-
 class FileReaderTest(TestCase):
     @patch("BrowserAutomator.file_reader.YAML", side_effect=YamlMock)
     def test_read_actions(self, yaml_mock: patch):
