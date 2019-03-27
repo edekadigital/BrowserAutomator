@@ -67,9 +67,9 @@ if you want to change the predefined logging behavior, change the parameters 'lo
 ## Usage
 In Python:
 - `from BrowserAutomator.setup import run`
-- `run([your_setup_yml_filenames], [your_loop_yml_filenames], your_chromedriver_path, log_path=your_log_path, log_level=your_log_level)`
+- `run([your_setup_yml_filenames], [your_loop_yml_filenames], chromedriver_path=your_chromedriver_path, log_path=your_log_path, log_level=your_log_level)`
 
-the default Chromedriver path is "/usr/bin/chromedriver"
+if not specified otherwise in chromedriver_path, Selenium is searching for your chromedriver in PATH.
 
 the default log path is "/tmp/BrowserAutomator.log"
 

@@ -13,7 +13,6 @@ class SeleniumSetupTest(TestCase):
     def test_selenim_setup(self, selenium_mock, chrome_options_mock):
         result = selenium_setup()
         chrome_options_mock.assert_called_once()
-        self.assertEqual("/usr/bin/chromedriver", selenium_mock.call_args[0][0])
         self.assertEqual(type(ChromeOptions()), type(selenium_mock.call_args[1]["chrome_options"]))
         self.assertEqual(type(SeleniumMock()), type(result))
         self.assertTrue(SeleniumMock().fullscreen)
