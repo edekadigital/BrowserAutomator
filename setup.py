@@ -17,6 +17,7 @@ setup(
         "selenium",
         "ruamel.yaml",
         "requests",
+        "pycrypto",
     ],
     python_requires='>=3.3',
     classifiers=[
