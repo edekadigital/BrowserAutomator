@@ -10,10 +10,10 @@ class SetupActionsTest(TestCase):
     filenames = ["filename"]
     url_0 = "https://testsite_0.com"
     url_1 = "https://testsite_1.com"
-    all_actions = {"zoom": zoom,"wait": wait, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
+    all_actions = {"zoom": zoom,"wait": wait, "wait for":wait_for, "load": load_url, "new_tab": new_tab, "switch_tabs": switch_tabs, "interact": interact,
                    "for every": for_every}
     driver = SeleniumMock()
-    actions = [(lambda driver, content: None, "a"), (lambda driver, content: 1, "b")]
+    actions = [(lambda driver, content, **kwargs: None, "a"), (lambda driver, content, **kwargs: 1, "b")]
 
     @patch("BrowserAutomator.setup_actions.get_actions", side_effect=lambda filename, all_actions: True)
     def test_actions_from_file(self, get_actions_mock):
@@ -34,7 +34,7 @@ class SetupActionsTest(TestCase):
         self.assertEqual(1, result)
 
     @patch("BrowserAutomator.setup_actions.actions_from_file",
-           side_effect=lambda filename: [(lambda driver, content: None, "a")])
+           side_effect=lambda filename: [(lambda driver, content, **kwargs: None, "a")])
     def test_action_runner_good(self, actions_from_file_mock):
         # testing list of filenames
         result = action_runner(self.driver, self.filenames)
@@ -46,7 +46,7 @@ class SetupActionsTest(TestCase):
         actions_from_file_mock.assert_called_with(self.filenames[0])
 
     @patch("BrowserAutomator.setup_actions.actions_from_file",
-           side_effect=lambda filename: [(lambda driver, content: 1, "a")])
+           side_effect=lambda filename: [(lambda driver, content, **kwargs: 1, "a")])
     def test_action_runner_bad(self, actions_from_file_mock):
         result = action_runner(self.driver, self.filenames)
         self.assertEqual(1, result)
@@ -144,7 +144,7 @@ class SetupActionsTest(TestCase):
         self.driver.reset()
 
     @patch("BrowserAutomator.setup_actions.actions_from_variable", side_effect=lambda actions: actions)
-    @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions: 0)
+    @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions, **kwargs: 0)
     def test_for_every_good(self, run_functions_mock, actions_from_variable_mock):
         content = {"urls": [self.url_0, self.url_1],
                    "actions": [
@@ -158,7 +158,7 @@ class SetupActionsTest(TestCase):
         self.assertEqual((self.driver, [{'new_tab': self.url_1}]), run_functions_mock.call_args_list[1][:1][0])
 
     @patch("BrowserAutomator.setup_actions.actions_from_variable", side_effect=lambda actions: actions)
-    @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions: 1)
+    @patch("BrowserAutomator.setup_actions.run_functions", side_effect=lambda driver, functions, **kwargs: 1)
     def test_for_every_bad(self, run_functions_mock, actions_from_variable_mock):
         content = {"urls": [self.url_0, self.url_1],
                    "actions": [

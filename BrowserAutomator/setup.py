@@ -27,6 +27,6 @@ def setup_caller(setup_filename, loop_filename, chromedriver_path, log_path, log
 
 
 def run(setup_filename, loop_filename, chromedriver_path=None,
-        log_path="/tmp/BrowserAutomator.log", log_level=None):
+        log_path="/tmp/BrowserAutomator.log", log_level=ERROR):
     while True:
         setup_caller(setup_filename, loop_filename, chromedriver_path, log_path, log_level)

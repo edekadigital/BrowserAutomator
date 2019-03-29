@@ -12,6 +12,7 @@ In these files you can specify actions that are run in the given order when the 
 The following actions are available:
 - `zoom`: given a percentage (e.g. 50%), zooms to the specified view
 - `wait`: given a time unit (seconds, minutes, hours, days) and an amount of time, blockingly waits for the amount of time
+- `wait for it`: given an action/a list of actions, tries to run them until it is successful (e.g. interacts where elements have to load for a variable time)
 - `load`: given an url, opens the site in the current tab
 - `new_tab`: given an url, opens the site in a new tab
 - `switch_tabs`: given the index of a tab, switches to the specified tab
