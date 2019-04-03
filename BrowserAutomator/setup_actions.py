@@ -61,7 +61,10 @@ def wait(driver, content, wait_for_it=False):
     """given a time to wait in seconds as `content`, blocks for the amount of seconds"""
     units = {"days": lambda x: 24 * 60 * 60 * x, "hours": lambda x: 60 * 60 * x, "minutes": lambda x: 60 * x,
              "seconds": lambda x: x}
-    unit, amount = tuple(content[0].items())[0]
+    # extracting the content
+    if type(content) == list:
+        content = content[0]
+    unit, amount = tuple(content.items())[0]
     sleep(units[unit](amount))
 
 
@@ -107,6 +110,8 @@ def switch_tabs(driver: webdriver.Chrome, content, wait_for_it=False):
 
 def interact(driver, content, wait_for_it=False):
     """given a list of actions on elements, executes the actions"""
+    if type(content) is not list:
+        content = [content]
     for action in content:
         interaction_content = action.get('content', None)
         result = action_on_element(driver, action['type'], action['name'], interaction_content, wait_for_it=wait_for_it)
@@ -116,12 +121,24 @@ def interact(driver, content, wait_for_it=False):
             return 1
 
 
+def get_js_command(elem_type, name, content=None):
+    js_types = {"id": "getElementById", "name": "getElementsByName", "class": "getElementsByClassName"}
+    js_type = js_types[elem_type]
+    js = f"javascript:document.{js_type}('{name}')"
+    if js_type[:11] == "getElements":
+        js += "[0]"
+    if content:
+        js += f".value={content};"
+    else:
+        js += ".click();"
+    return js
+
+
 def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None, wait_for_it=False):
     """given the type of an element and its name
        clicks the element from the site or writes `content` into it if it is specified"""
     types = {"id": By.ID, "name": By.NAME, "class": By.CLASS_NAME, "css": By.CSS_SELECTOR, "xpath": By.XPATH,
              "tag_name": By.TAG_NAME}
-    js_types = {"id": "getElementById", "name": "getElementsByName[0]", "class": "getElementsByClassName[0]"}
     try:
         elem = driver.find_element(types[elem_type], name)
     except (NoSuchElementException, NoSuchAttributeException):
@@ -135,7 +152,7 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None, w
             content = decrypt_content(content)
         # visible text field
         if not elem.is_displayed():
-            js = "{0}{1}('{2}').value={3};".format("javascript:document.", js_types[elem_type], name, content)
+            js = get_js_command(elem_type, name, content)
             driver.execute_script(js)
         # invisible text field
         else:
@@ -151,7 +168,7 @@ def action_on_element(driver: webdriver.Chrome, elem_type, name, content=None, w
         elem.click()
     # invisible button
     else:
-        js = "{0}{1}('{2}').click();".format("javascript:document.", js_types[elem_type], name)
+        js = get_js_command(elem_type, name)
         driver.execute_script(js)
 
 

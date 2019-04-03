@@ -1,0 +1,16 @@
+- load: https://www.google.com/
+- interact:
+    - type: xpath
+      name: //input[@class='gLFyf gsfi']
+      content: test
+    - type: name
+      name: btnK
+- for every:
+    urls:
+      - https://github.com/edekadigital/browserautomator
+      - https://www.digital.edeka/
+    actions:
+      - load: ""
+      - wait:
+          seconds: 5
+- switch_tabs: 0

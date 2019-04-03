@@ -44,7 +44,9 @@ def reset(driver):
 
 class PeriodicallyCheck:
     def __init__(self, content):
-        self.time_unit, self.every_n = tuple(content[0].items())[0]
+        if type(content) is list:
+            content = content[0]
+        self.time_unit, self.every_n = tuple(content.items())[0]
         self.last_refresh = datetime.now()
         self.current_tab = 0
 

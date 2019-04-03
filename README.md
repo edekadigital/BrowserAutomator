@@ -37,7 +37,7 @@ In this case BrowserAutomator has the possibility of using RSA encryption with a
 To generate both keys needed, you can use the following function:
 `BrowserAutomator.cipher_util.key_generator(private_key_path, public_key_path, key_length=1024)`
 
-This creates by default a 1024 bit RSA key pair using the "pycrypto" library and writes the generated keys to the given paths. If desired you can also use any other key generator.
+This creates by default a 1024 bit RSA key pair using the "pycryptodome" library and writes the generated keys to the given paths. If desired you can also use any other key generator.
 
 ### Encrypting the content
 To encrypt a string you can use:
