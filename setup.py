@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="BrowserAutomator",
-    version="1.0.8",
+    version="1.0.9",
     author="EDEKA DIGITAL",
     description="A package to simplify browser automation",
     long_description=long_description,
@@ -17,7 +17,7 @@ setup(
         "selenium",
         "ruamel.yaml",
         "requests",
-        "pycrypto",
+        "pycryptodome",
     ],
     python_requires='>=3.3',
     classifiers=[
