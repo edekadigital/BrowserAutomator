@@ -23,7 +23,8 @@ The following actions are available:
 - `for_every`: given a list of `urls` and a list of `actions`, runs the actions on every url. Urls in `load` and `new_tab` actions are replaced by the current url
 
 #### loop yml
-In these files you can specify actions that loop after the setup ran once.
+In these files you can specify actions that loop after the setup ran once. The check whether or not an action has to run is determined by using modulo, not counting from the start of the program (repeating every 8 hours => repeating every time the clock hits 0:00 AM, 8:00 AM, 4 PM).
+
 The following actions are available:
 - `repeat every`: given a time unit (seconds, minutes, hours, days) and an amount of time, restarts the script every n seconds/minutes/...
 - `fix wifi`: given a time unit and an amount of time, checks every n seconds/minutes/... if the network is working, and restarts the script if it doesn't

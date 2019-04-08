@@ -1,2 +1,7 @@
+# switches to the next tab every 30 seconds
 - switch tabs:
-    seconds: 3
+    seconds: 30
+
+# stops and reruns the setup every 6 hours (0:00, 6:00, 12:00, 18:00)
+- repeat every:
+    hours: 6

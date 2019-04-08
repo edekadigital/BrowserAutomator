@@ -1,16 +1,23 @@
+# opens google.com
 - load: https://www.google.com/
 - interact:
+    # locating the search field and inputting "test"
     - type: xpath
       name: //input[@class='gLFyf gsfi']
       content: test
+    # hitting search
     - type: name
       name: btnK
+# executes the actions for both urls
 - for every:
     urls:
       - https://github.com/edekadigital/browserautomator
       - https://www.digital.edeka/
     actions:
+      # "" automatically gets replaced by the urls
       - load: ""
+      # waiting 5s for the site to finish loading
       - wait:
           seconds: 5
+# switching to the first tab
 - switch_tabs: 0
