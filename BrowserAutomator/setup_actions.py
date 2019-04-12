@@ -124,7 +124,7 @@ def interact(driver, content, wait_for_it=False):
 def get_js_command(elem_type, name, content=None):
     js_types = {"id": "getElementById", "name": "getElementsByName", "class": "getElementsByClassName"}
     js_type = js_types[elem_type]
-    js = f"javascript:document.{js_type}('{name}')"
+    js = "javascript:document.{0}('{1}')".format(js_type, name)
     if js_type[:11] == "getElements":
         js += "[0]"
     if content:

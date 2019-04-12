@@ -64,7 +64,7 @@ To use the encrypted data in the interact action you have to use the following s
 ## Logging
 if you want to change the predefined logging behavior, change the parameters 'log_path' and 'log_level' in your call to the 'run' function.
 - `log_path` can be any valid path including filename or None (this disables logging to a file). The default is "/tmp/BrowserAutomator.log"
-- `log_level` can be any logging level provided by the logging library, or None (this disables logging by the library completely). The default is "logging.ERROR"
+- `log_level` can be any logging level provided by the logging library, a string ("INFO", "DEBUG" etc.), or None (this disables logging by the library completely). The default is "ERROR"
 
 ## Usage
 In Python:
@@ -75,4 +75,4 @@ if not specified otherwise in chromedriver_path, Selenium is searching for your 
 
 the default log path is "/tmp/BrowserAutomator.log"
 
-the default log level is logging.ERROR
+the default log level is "ERROR"

@@ -3,7 +3,7 @@ import logging.config
 import sys
 
 
-def logging_setup(path="/tmp/BrowserAutomator.log", level=logging.INFO):
+def logging_setup(path="/tmp/BrowserAutomator.log", level="ERROR"):
     logger = logging.getLogger("BrowserAutomator")
     if level:
         console_handler = logging.StreamHandler()
