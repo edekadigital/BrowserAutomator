@@ -128,7 +128,7 @@ def get_js_command(elem_type, name, content=None):
     if js_type[:11] == "getElements":
         js += "[0]"
     if content:
-        js += f".value={content};"
+        js += ".value={0};".format(content)
     else:
         js += ".click();"
     return js
